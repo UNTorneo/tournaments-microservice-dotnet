@@ -16,11 +16,11 @@ namespace TournamentWebService.Teams.Services
             _teamsCollection = database.GetCollection<Team>(teamsMongoDBSettings.Value.CollectionName);
         }
 
-        public async Task CreateAsync(Team tournament)
+        public async Task CreateAsync(Team team)
         {
-            tournament.createdAt = DateTime.Now;
-            tournament.updatedAt = DateTime.Now;
-            await _teamsCollection.InsertOneAsync(tournament);
+            team.createdAt = DateTime.Now;
+            team.updatedAt = DateTime.Now;
+            await _teamsCollection.InsertOneAsync(team);
             return;
         }
 
@@ -55,7 +55,7 @@ namespace TournamentWebService.Teams.Services
         public async Task<Team> GetOneAsync(string id)
         {
             //FilterDefinition<Tournament> filter = Builders<Tournament>.Filter.Eq("Id", id);
-            return (Team)await _teamsCollection.FindAsync(team => team.Id == id);
+            return await _teamsCollection.Find(team => team.Id == id).FirstOrDefaultAsync();
         }
     }
 }

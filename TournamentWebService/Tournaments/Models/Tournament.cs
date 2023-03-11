@@ -15,8 +15,8 @@ namespace TournamentWebService.Tournaments.Models
         public string clanId { get; set; }
         public string? venueId { get; set; } = null!;
         public string? venueName { get; set; } = null!;
-        public string access { get; set; } = null!;
-        public string status { get; set; } = null!;
+        public string access { get; set; }
+        public string status { get; set; }
         public DateTime? createdAt { get; set; }
         public DateTime? updatedAt { get; set;}
 

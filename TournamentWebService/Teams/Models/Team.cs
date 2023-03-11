@@ -10,7 +10,7 @@ namespace TournamentWebService.Teams.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string name { get; set; }
-        public string? clanId { get; set; }
+        public string? clanId { get; set; } = null!;
         public List<string> members { get; set; }
         public List<string> tournaments { get; set; }
         public DateTime? createdAt { get; set; }

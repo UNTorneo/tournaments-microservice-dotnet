@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "L772sZYlqKV6+fbMvlwW3p5TT1667zIkKM5KtsLg6TgmW0TPXgpsAZmjF+WA18IKty4ZAYLqAo8rvQlAlDCoFg==",
+  "dgSpecHash": "xifD3w4jgrDMkQzr+FQGTnW8t874dv1S2ypqPlr0zMwHyTUnDMw93b9NFU3bUXA1xW7I0D9pZ8vaUwFCD5T3Fg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Daniel Galindo\\Documents\\Carpetas Desktop\\UNAL\\Arquitectura de Software\\Proyecto\\Back-End(Parte 1)\\TournamentWebService\\TournamentWebService\\TournamentWebService.csproj",
+  "projectFilePath": "C:\\Users\\Daniel Galindo\\Documents\\Carpetas Desktop\\UNAL\\Arquitectura de Software\\Proyecto\\Back-End(Parte 1)\\tournaments-microservice-.NET\\TournamentWebService\\TournamentWebService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Daniel Galindo\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\Daniel Galindo\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",

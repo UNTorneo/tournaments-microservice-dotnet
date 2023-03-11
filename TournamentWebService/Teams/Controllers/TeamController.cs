@@ -16,8 +16,9 @@ namespace TournamentWebService.Teams.Controllers
     {
         private readonly TeamMongoDBService _teamMongoDBService;
         private readonly TournamentMongoDBService _tournamentMongoDBService;
-        public TeamController(TeamMongoDBService teamMongoDBService) {
+        public TeamController(TeamMongoDBService teamMongoDBService, TournamentMongoDBService tournamentMongoDBService) {
             _teamMongoDBService = teamMongoDBService;
+            _tournamentMongoDBService = tournamentMongoDBService;
         }
 
         [HttpGet]

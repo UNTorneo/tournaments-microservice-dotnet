@@ -63,7 +63,7 @@ namespace TournamentWebService.Tournaments.Services
         public async Task<Tournament> GetOneAsync(string id)
         {
             //FilterDefinition<Tournament> filter = Builders<Tournament>.Filter.Eq("Id", id);
-            return (Tournament) _tournamentsCollection.Find(tournament => tournament.Id == id);
+            return await _tournamentsCollection.Find(tournament => tournament.Id == id).FirstOrDefaultAsync();
         }
     }
 }
