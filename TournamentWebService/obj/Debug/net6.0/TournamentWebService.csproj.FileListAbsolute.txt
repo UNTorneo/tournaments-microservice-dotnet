@@ -47,3 +47,5 @@ C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\TournamentWebService\TournamentWebService\bin\Debug\net6.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\TournamentWebService\TournamentWebService\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\TournamentWebService\TournamentWebService\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\TournamentWebService\TournamentWebService\obj\Debug\net6.0\TournamentWebService.Properties.Resources.resources
+C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\TournamentWebService\TournamentWebService\obj\Debug\net6.0\TournamentWebService.csproj.GenerateResource.cache
