@@ -12,6 +12,7 @@ namespace TournamentWebService.Tournaments.Models
         public string name { get; set; }
         public List<string> teams { get; set; }
         public string sportId { get; set; }
+        public string modeId { get; set; }
         public string clanId { get; set; }
         public string? venueId { get; set; } = null!;
         public string? venueName { get; set; } = null!;

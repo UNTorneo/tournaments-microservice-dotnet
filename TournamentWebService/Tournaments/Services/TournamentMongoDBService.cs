@@ -40,6 +40,8 @@ namespace TournamentWebService.Tournaments.Services
                 update = update.Set(nameof(tournament.teams), tournament.teams);
             if (tournament.sportId != null)
                 update = update.Set(nameof(tournament.sportId), tournament.sportId);
+            if (tournament.modeId != null)
+                update = update.Set(nameof(tournament.modeId), tournament.modeId);
             if (tournament.clanId != null)
                 update = update.Set(nameof(tournament.clanId), tournament.clanId);
             if (tournament.venueId != null)
