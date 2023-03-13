@@ -60,11 +60,11 @@ namespace TournamentWebService.Tournaments.Controllers
 
                 if (tournament.access != null && !TournamentDataValidation.tournamentAcces.Contains(tournament.access))
                 {
-                    return CustomResult("El tipo de acceso del torneo no es valido", HttpStatusCode.BadRequest);
+                    return CustomResult("El tipo de acceso del torneo no es válido", HttpStatusCode.BadRequest);
                 }
-                if (tournament.access != null && !TournamentDataValidation.tournamentStatus.Contains(tournament.status))
+                if (tournament.status != null && !TournamentDataValidation.tournamentStatus.Contains(tournament.status))
                 {
-                    return CustomResult("El estado del torneo no es valido", HttpStatusCode.BadRequest);
+                    return CustomResult("El estado del torneo no es válido", HttpStatusCode.BadRequest);
                 }
                 await _tournamentMongoDBService.UpdateAsync(id, tournament);
                 return CustomResult("Torneo actualizado");
@@ -97,6 +97,42 @@ namespace TournamentWebService.Tournaments.Controllers
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
                 if (tournament == null) { return CustomResult("Torneo no encontrado", HttpStatusCode.BadRequest); }
                 return CustomResult(tournament);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+            }
+        }
+
+        [HttpGet]
+        [Route("in-progress")]
+        public async Task<IActionResult> GetActiveTournaments(string id)
+        {
+            try
+            {
+                List<Tournament> activeTournaments = await _tournamentMongoDBService.GetActiveTournamentsAsync();
+                if (activeTournaments.Count() == 0) { return CustomResult("No hay torneos activos", HttpStatusCode.BadRequest); }
+                return CustomResult(activeTournaments);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+            }
+        }
+
+        [HttpGet]
+        [Route("by-status")]
+        public async Task<IActionResult> GetTournamentsByStatus([FromQuery(Name = "status")] string status)
+        {
+            try
+            {
+                if (status != null && !TournamentDataValidation.tournamentStatus.Contains(status))
+                {
+                    return CustomResult("El estado del torneo no es válido", HttpStatusCode.BadRequest);
+                }
+                List<Tournament> activeTournaments = await _tournamentMongoDBService.GetTournamentsByStatusAsync(status);
+                if (activeTournaments.Count() == 0) { return CustomResult("No hay torneos activos", HttpStatusCode.BadRequest); }
+                return CustomResult(activeTournaments);
             }
             catch (Exception ex)
             {

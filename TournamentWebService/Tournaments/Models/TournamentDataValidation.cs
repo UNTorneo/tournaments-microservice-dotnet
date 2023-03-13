@@ -13,7 +13,21 @@
             "confirmed",
             "finished",
             "canceled",
-            "in progres"
+            "in progress"
         };
+    }
+
+    public enum TournamentAccessIndex
+    {
+        Private,
+        Public
+    }
+
+    public enum TournamentStatusIndex
+    {
+        Confirmed,
+        Finished,
+        Canceled,
+        InProgres
     }
 }

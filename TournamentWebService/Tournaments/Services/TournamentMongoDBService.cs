@@ -1,4 +1,5 @@
 ﻿using TournamentWebService.Tournaments.Models;
+using TournamentWebService.Tournaments.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -64,6 +65,17 @@ namespace TournamentWebService.Tournaments.Services
         {
             //FilterDefinition<Tournament> filter = Builders<Tournament>.Filter.Eq("Id", id);
             return await _tournamentsCollection.Find(tournament => tournament.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Tournament>> GetActiveTournamentsAsync()
+        {
+            int tournamentStatusIndex = (int) TournamentStatusIndex.InProgres;
+            return await _tournamentsCollection.Find(tournament => tournament.status == TournamentDataValidation.tournamentStatus[tournamentStatusIndex]).ToListAsync();
+        }
+
+        public async Task<List<Tournament>> GetTournamentsByStatusAsync(string status)
+        {
+            return await _tournamentsCollection.Find(tournament => tournament.status == status).ToListAsync();
         }
     }
 }
