@@ -1,3 +1,5 @@
+using TournamentWebService.Matches.Models;
+using TournamentWebService.Matches.Services;
 using TournamentWebService.Teams.Models;
 using TournamentWebService.Teams.Services;
 using TournamentWebService.Tournaments.Models;
@@ -9,6 +11,8 @@ builder.Services.Configure<TournamentsMongoDBSettings>(builder.Configuration.Get
 builder.Services.AddSingleton<TournamentMongoDBService>();
 builder.Services.Configure<TeamsMongoDBSettings>(builder.Configuration.GetSection("TeamsMongoDB"));
 builder.Services.AddSingleton<TeamMongoDBService>();
+builder.Services.Configure<MatchesMongoDBSettings>(builder.Configuration.GetSection("MatchesMongoDB"));
+builder.Services.AddSingleton<MatchMongoDBService>();
 
 // Add services to the container.
 
