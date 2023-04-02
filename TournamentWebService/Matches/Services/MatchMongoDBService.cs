@@ -36,8 +36,12 @@ namespace TournamentWebService.Matches.Services
             UpdateDefinition<Match> update = Builders<Match>.Update.Set("updatedAt", DateTime.Now);
             if (match.tournamentId != null)
                 update = update.Set(nameof(match.tournamentId), match.tournamentId);
-            if (match.teams != null)
-                update = update.Set(nameof(match.teams), match.teams);
+            if (match.homeTeam != null)
+                update = update.Set(nameof(match.homeTeam), match.homeTeam);
+            if (match.visitingTeam != null)
+                update = update.Set(nameof(match.visitingTeam), match.visitingTeam);
+            update = update.Set(nameof(match.homeTeamScore), match.homeTeamScore);
+            update = update.Set(nameof(match.visitingTeamScore), match.visitingTeamScore);
             if (match.date != null)
                 update = update.Set(nameof(match.date), match.date);
             if (match.courtId != null)

@@ -27,12 +27,12 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 List<Team> teams = await _teamMongoDBService.GetAllAsync();
-                if (teams.Count == 0) { return CustomResult("No se encontraron equipos", HttpStatusCode.BadRequest); }
-                return CustomResult(teams);
+                if (teams.Count == 0) return BadRequest(new { error = "No se encontraron equipos" });
+                return Ok(new { message = "Equipos encontrados", teams });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -42,11 +42,11 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 await _teamMongoDBService.CreateAsync(team);
-                return CreatedAtAction(nameof(GetAllTeams), new { id = team.Id }, team);
+                return CreatedAtAction(nameof(GetAllTeams), new { id = team.Id }, new { message = "Equipo creado", team });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -56,13 +56,13 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 Team teamAux = await _teamMongoDBService.GetOneAsync(id);
-                if (teamAux == null){ return CustomResult("Equipo no encontrado", HttpStatusCode.BadRequest); }
+                if (teamAux == null) return BadRequest(new { error = "No se encontraron equipos" });
                 await _teamMongoDBService.UpdateAsync(id, team);
-                return CustomResult("Equipo actualizado");
+                return Ok(new { message = "Equipo actualizado" });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -72,13 +72,13 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 Team teamAux = await _teamMongoDBService.GetOneAsync(id);
-                if (teamAux == null) { return CustomResult("Equipo no encontrado", HttpStatusCode.BadRequest); }
+                if (teamAux == null) return BadRequest(new { error = "No se encontraron equipos" });
                 await _teamMongoDBService.DeleteAsync(id);
-                return CustomResult("Equipo eliminado");
+                return Ok(new { message = "Equipo eliminado" });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -88,12 +88,12 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 Team team = await _teamMongoDBService.GetOneAsync(id);
-                if (team == null) { return CustomResult("Equipo no encontrado", HttpStatusCode.BadRequest); }
-                return CustomResult(team);
+                if (team == null) return BadRequest(new { error = "No se encontraron equipos" });
+                return Ok(new { message = "Equipo encontrado", team });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -103,20 +103,20 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 Team team = await _teamMongoDBService.GetOneAsync(teamId);
-                if (team == null) { return CustomResult("Equipo no encontrado", HttpStatusCode.BadRequest); }
+                if (team == null) return BadRequest(new { error = "Equipo no encontrado" });
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(tournamentId);
-                if (tournament == null) { return CustomResult("Torneo no encontrado", HttpStatusCode.BadRequest); }
+                if (tournament == null) return BadRequest(new { error = "Equipo no encontrado" });
                 if (tournament.teams.Contains(teamId) || team.tournaments.Contains(tournamentId))
-                    return CustomResult("El equipo ya se encuentra registrado en este torneo", HttpStatusCode.BadRequest);
+                    return BadRequest(new { error = "El equipo ya se encuentra registrado en este torneo" });
                 team.tournaments.Add(tournamentId);
                 await _teamMongoDBService.UpdateAsync(teamId, team);
                 tournament.teams.Add(teamId);
                 await _tournamentMongoDBService.UpdateAsync(tournamentId, tournament);
-                return CustomResult("Registro al torneo exitoso");
+                return Ok(new { message = "Registro al torneo exitoso" });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
     }

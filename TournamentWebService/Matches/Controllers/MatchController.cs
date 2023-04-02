@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using CoreApiResponse;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -24,12 +23,12 @@ namespace TournamentWebService.Matches.Controllers
             try
             {
                 List<Match> matches = await _matchMongoDBService.GetAllAsync();
-                if (matches.Count == 0) { return CustomResult("No se encontraron partidos", HttpStatusCode.BadRequest); }
-                return CustomResult(matches);
+                if (matches.Count == 0) return BadRequest(new { error = "No se encontraron partidos" });
+                return Ok(new { message = "Partidos encontrados", matches });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -38,12 +37,16 @@ namespace TournamentWebService.Matches.Controllers
         {
             try
             {
+                if (match.tournamentId == null || match.homeTeam == null || match.visitingTeam == null || match.date == null)
+                {
+                    return BadRequest(new {error = "La petición no tiene la información suficiente para crear un partido"});
+                }
                 await _matchMongoDBService.CreateAsync(match);
-                return CreatedAtAction(nameof(GetAllMatches), new { id = match.Id }, match);
+                return CreatedAtAction(nameof(GetAllMatches), new { id = match.Id }, new { message = "Partido creado", match });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -53,13 +56,13 @@ namespace TournamentWebService.Matches.Controllers
             try
             {
                 Match matchAux = await _matchMongoDBService.GetOneAsync(id);
-                if (matchAux == null) { return CustomResult("Partido no encontrado", HttpStatusCode.BadRequest); }
+                if (matchAux == null) return BadRequest(new { error = "Partido no encontrado" });
                 await _matchMongoDBService.UpdateAsync(id, match);
-                return CustomResult("Partido actualizado");
+                return Ok(new { message = "Partido actualizado" });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -69,13 +72,13 @@ namespace TournamentWebService.Matches.Controllers
             try
             {
                 Match matchAux = await _matchMongoDBService.GetOneAsync(id);
-                if (matchAux == null) { return CustomResult("Partido no encontrado", HttpStatusCode.BadRequest); }
+                if (matchAux == null) return BadRequest(new { error = "Partido no encontrado" });
                 await _matchMongoDBService.DeleteAsync(id);
-                return CustomResult("Partido eliminado");
+                return Ok(new { message = "Partido eliminado" });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -85,12 +88,12 @@ namespace TournamentWebService.Matches.Controllers
             try
             {
                 Match match = await _matchMongoDBService.GetOneAsync(id);
-                if (match == null) { return CustomResult("Partido no encontrado", HttpStatusCode.BadRequest); }
-                return CustomResult(match);
+                if (match == null) return BadRequest(new { error = "Partido no encontrado" });
+                return Ok(new { message = "Partido obtenido", match });
             }
             catch (Exception ex)
             {
-                return CustomResult(ex.Message, HttpStatusCode.BadGateway);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
     }
