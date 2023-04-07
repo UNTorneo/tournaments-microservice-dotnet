@@ -13,7 +13,7 @@
             "confirmed",
             "finished",
             "canceled",
-            "in progress"
+            "in-progress"
         };
     }
 
