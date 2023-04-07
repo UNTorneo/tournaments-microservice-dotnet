@@ -105,7 +105,7 @@ namespace TournamentWebService.Teams.Controllers
                 Team team = await _teamMongoDBService.GetOneAsync(teamId);
                 if (team == null) return BadRequest(new { error = "Equipo no encontrado" });
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(tournamentId);
-                if (tournament == null) return BadRequest(new { error = "Equipo no encontrado" });
+                if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
                 if (tournament.teams.Contains(teamId) || team.tournaments.Contains(tournamentId))
                     return BadRequest(new { error = "El equipo ya se encuentra registrado en este torneo" });
                 team.tournaments.Add(tournamentId);
