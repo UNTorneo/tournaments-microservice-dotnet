@@ -21,9 +21,10 @@ namespace TournamentWebService.Tournaments.Controllers
         public async Task<IActionResult> GetAllTournaments() {
             try
             {
+                Console.WriteLine("GetAllTournaments");
                 List<Tournament> tournaments = await _tournamentMongoDBService.GetAllAsync();
                 if (tournaments.Count == 0) return BadRequest(new { error = "No se encontraron torneos" });
-                return Ok(new { message = "Torneos encontrados", tournaments });
+                return Ok(tournaments);
             }catch (Exception ex)
             {
                 return StatusCode(500, new { error = ex.Message });
@@ -95,7 +96,7 @@ namespace TournamentWebService.Tournaments.Controllers
             {
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
                 if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
-                return Ok(new { message = "Torneo encontrado", tournament });
+                return Ok(tournament);
             }
             catch (Exception ex)
             {
@@ -111,7 +112,7 @@ namespace TournamentWebService.Tournaments.Controllers
             {
                 List<Tournament> activeTournaments = await _tournamentMongoDBService.GetActiveTournamentsAsync();
                 if (activeTournaments.Count() == 0) return BadRequest(new { error = "No hay torneos activos" });
-                return Ok(new { message = "Torneos encontrados", activeTournaments });
+                return Ok(activeTournaments);
             }
             catch (Exception ex)
             {
@@ -131,7 +132,7 @@ namespace TournamentWebService.Tournaments.Controllers
                 }
                 List<Tournament> tournaments = await _tournamentMongoDBService.GetTournamentsByStatusAsync(status);
                 if (tournaments.Count() == 0) return BadRequest(new { error = "No hay torneos con este estado" });
-                return Ok(new { message = "Torneos encontrados", tournaments });
+                return Ok(tournaments);
             }
             catch (Exception ex)
             {
