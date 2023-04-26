@@ -16,6 +16,7 @@ namespace TournamentWebService.Matches.Models
         public int visitingTeamScore { get; set; } = 0;
         public DateTime? date { get; set; }
         public string courtId { get; set; }
+        public string status { get; set; }
         public DateTime? createdAt { get; set; }
         public DateTime? updatedAt { get; set; }
     }

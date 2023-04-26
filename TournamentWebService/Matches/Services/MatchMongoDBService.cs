@@ -62,5 +62,17 @@ namespace TournamentWebService.Matches.Services
             //FilterDefinition<Tournament> filter = Builders<Tournament>.Filter.Eq("Id", id);
             return await _matchesCollection.Find(match => match.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<List<Match>> GetMatchesByTournamentAsync(string id)
+        {
+            //FilterDefinition<Tournament> filter = Builders<Tournament>.Filter.Eq("Id", id);
+            return await _matchesCollection.Find(match => match.tournamentId == id).ToListAsync();
+        }
+
+        public async Task<List<Match>> GetMatchesByTeamAsync(string id)
+        {
+            return await _matchesCollection.Find(match => match.visitingTeam == id || match.homeTeam == id).ToListAsync();
+        }
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using TournamentWebService.Tournaments.Models;
-using TournamentWebService.Tournaments.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Bson;

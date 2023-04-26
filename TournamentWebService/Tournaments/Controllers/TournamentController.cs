@@ -111,6 +111,7 @@ namespace TournamentWebService.Tournaments.Controllers
             try
             {
                 List<Tournament> activeTournaments = await _tournamentMongoDBService.GetActiveTournamentsAsync();
+                Console.WriteLine(activeTournaments);
                 if (activeTournaments.Count() == 0) return BadRequest(new { error = "No hay torneos activos" });
                 return Ok(activeTournaments);
             }

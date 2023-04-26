@@ -28,7 +28,7 @@ namespace TournamentWebService.Teams.Controllers
             {
                 List<Team> teams = await _teamMongoDBService.GetAllAsync();
                 if (teams.Count == 0) return BadRequest(new { error = "No se encontraron equipos" });
-                return Ok(new { message = "Equipos encontrados", teams });
+                return Ok(teams);
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace TournamentWebService.Teams.Controllers
             {
                 Team team = await _teamMongoDBService.GetOneAsync(id);
                 if (team == null) return BadRequest(new { error = "No se encontraron equipos" });
-                return Ok(new { message = "Equipo encontrado", team });
+                return Ok(team);
             }
             catch (Exception ex)
             {
