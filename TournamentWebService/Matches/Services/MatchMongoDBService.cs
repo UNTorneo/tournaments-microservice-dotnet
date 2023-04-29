@@ -46,6 +46,8 @@ namespace TournamentWebService.Matches.Services
                 update = update.Set(nameof(match.date), match.date);
             if (match.courtId != null)
                 update = update.Set(nameof(match.courtId), match.courtId);
+            if (match.status != null)
+                update = update.Set(nameof(match.status), match.status);
             await _matchesCollection.UpdateOneAsync(filter, update);
             return;
         }

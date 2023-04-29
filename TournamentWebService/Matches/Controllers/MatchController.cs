@@ -53,6 +53,12 @@ namespace TournamentWebService.Matches.Controllers
                 {
                     return BadRequest(new { error = "El estado del partido no es valido" });
                 }
+                Tournament tournament = await _tournamentMongoDBService.GetOneAsync(match.tournamentId);
+                if (tournament == null) return BadRequest(new { error = "El torneo enviado no existe" });
+                Team homeTeam = await _teamMongoDBService.GetOneAsync(match.homeTeam);
+                if (homeTeam == null) return BadRequest(new { error = "El equipo local enviado no existe" });
+                Team visitingTeam = await _teamMongoDBService.GetOneAsync(match.visitingTeam);
+                if (visitingTeam == null) return BadRequest(new { error = "El equipo visitante enviado no existe" });
                 await _matchMongoDBService.CreateAsync(match);
                 return CreatedAtAction(nameof(GetAllMatches), new { id = match.Id }, new { message = "Partido creado", match });
             }
@@ -72,6 +78,11 @@ namespace TournamentWebService.Matches.Controllers
                 if (match.status != null && !MatchDataValidation.matchStatus.Contains(match.status))
                 {
                     return BadRequest(new { error = "El estado del partido no es valido" });
+                }
+                if(match.homeTeamScore == 0 && match.visitingTeamScore == 0)
+                {
+                    match.homeTeamScore = matchAux.homeTeamScore;
+                    match.visitingTeamScore = matchAux.visitingTeamScore;
                 }
                 await _matchMongoDBService.UpdateAsync(id, match);
                 return Ok(new { message = "Partido actualizado" });
@@ -113,7 +124,7 @@ namespace TournamentWebService.Matches.Controllers
             }
         }
 
-        [HttpGet("/tournament-matches/{id}")]
+        [HttpGet("tournament-matches/{id}")]
         public async Task<IActionResult> GetTournamentMatches(string id)
         {
             try
@@ -130,7 +141,7 @@ namespace TournamentWebService.Matches.Controllers
             }
         }
 
-        [HttpGet("/team-matches/{id}")]
+        [HttpGet("team-matches/{id}")]
         public async Task<IActionResult> GetTeamMatches(string id)
         {
             try
