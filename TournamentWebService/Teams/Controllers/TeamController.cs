@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Net;
 using CoreApiResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using TournamentWebService.Core;
 using TournamentWebService.Teams.Models;
 using TournamentWebService.Teams.Services;
 using TournamentWebService.Tournaments.Models;
 using TournamentWebService.Tournaments.Services;
+
 
 namespace TournamentWebService.Teams.Controllers
 {
@@ -88,8 +91,30 @@ namespace TournamentWebService.Teams.Controllers
             try
             {
                 Team team = await _teamMongoDBService.GetOneAsync(id);
+                Console.WriteLine("########################################");
+                Console.WriteLine(team.ToString());
+                Console.WriteLine("########################################");
                 if (team == null) return BadRequest(new { error = "No se encontraron equipos" });
-                return Ok(team);
+                List<Task<HttpResponseMessage>> taskList = new List<Task<HttpResponseMessage>> ();
+                HttpClient client = new HttpClient();
+                foreach (string user in team.members) {
+                    var response = client.GetAsync($"{UrlConstants.usersMS}/{user}");
+                    taskList.Add(response);
+                }
+                var usersMsResponse = await Task.WhenAll(taskList);
+                List<Users?> teamsPopulated = new();
+                for (int i = 0; i < usersMsResponse.Length; i++) {
+                    if (usersMsResponse[i].IsSuccessStatusCode)
+                    {
+                        teamsPopulated.Add(await usersMsResponse[i].Content.ReadFromJsonAsync<Users>());
+                    }
+                    else {
+                        teamsPopulated.Add(null);
+                    }
+                }
+                TeamMembersPopulated res = new TeamMembersPopulated(team);
+                res.members = teamsPopulated;
+                return Ok(res);
             }
             catch (Exception ex)
             {
