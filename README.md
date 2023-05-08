@@ -14,7 +14,7 @@ cd ..
 docker build -f .\TournamentWebService\Dockerfile --force-rm -t tournamentcoreapp .
 
 Running container
-docker run -d -p 5001:5001 --name TournamentWebApp tournamentcoreapp
+docker run -d -p 443:443 --name TournamentWebApp tournamentcoreapp
 
 
 Setting db connectionStrings in user-secrets (In case env variables doesn't work)
