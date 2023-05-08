@@ -5,7 +5,10 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_TournamentsMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority",
+        "ASPNETCORE_TeamsMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority",
+        "ASPNETCORE_MatchesMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7004;http://localhost:5023"

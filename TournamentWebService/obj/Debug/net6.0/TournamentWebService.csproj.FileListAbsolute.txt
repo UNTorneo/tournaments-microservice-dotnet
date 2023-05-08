@@ -100,3 +100,5 @@ C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\tournaments-microservice-.NET\TournamentWebService\obj\Debug\net6.0\TournamentWebService.pdb
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\tournaments-microservice-.NET\TournamentWebService\obj\Debug\net6.0\TournamentWebService.genruntimeconfig.cache
 C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\tournaments-microservice-.NET\TournamentWebService\obj\Debug\net6.0\ref\TournamentWebService.dll
+C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\tournaments-microservice-.NET\TournamentWebService\bin\Debug\net6.0\RabbitMQ.Client.dll
+C:\Users\Daniel Galindo\Documents\Carpetas Desktop\UNAL\Arquitectura de Software\Proyecto\Back-End(Parte 1)\tournaments-microservice-.NET\TournamentWebService\bin\Debug\net6.0\System.Threading.Channels.dll
