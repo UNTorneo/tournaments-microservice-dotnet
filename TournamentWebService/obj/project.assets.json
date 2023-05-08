@@ -5041,31 +5041,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Daniel Galindo\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/segc/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Daniel Galindo\\Documents\\Carpetas Desktop\\UNAL\\Arquitectura de Software\\Proyecto\\Back-End(Parte 1)\\tournaments-microservice-.NET\\TournamentWebService\\TournamentWebService.csproj",
+      "projectUniqueName": "/Users/segc/Desktop/unal/arquisoft/tournaments-microservice-dotnet/TournamentWebService/TournamentWebService.csproj",
       "projectName": "TournamentWebService",
-      "projectPath": "C:\\Users\\Daniel Galindo\\Documents\\Carpetas Desktop\\UNAL\\Arquitectura de Software\\Proyecto\\Back-End(Parte 1)\\tournaments-microservice-.NET\\TournamentWebService\\TournamentWebService.csproj",
-      "packagesPath": "C:\\Users\\Daniel Galindo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Daniel Galindo\\Documents\\Carpetas Desktop\\UNAL\\Arquitectura de Software\\Proyecto\\Back-End(Parte 1)\\tournaments-microservice-.NET\\TournamentWebService\\obj\\",
+      "projectPath": "/Users/segc/Desktop/unal/arquisoft/tournaments-microservice-dotnet/TournamentWebService/TournamentWebService.csproj",
+      "packagesPath": "/Users/segc/.nuget/packages/",
+      "outputPath": "/Users/segc/Desktop/unal/arquisoft/tournaments-microservice-dotnet/TournamentWebService/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Daniel Galindo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/segc/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5124,7 +5117,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
       }
     }
   }

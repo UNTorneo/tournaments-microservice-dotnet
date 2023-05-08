@@ -1,17 +1,26 @@
 {
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:62202",
+      "sslPort": 44324
+    }
+  },
   "profiles": {
     "TournamentWebService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7004;http://localhost:5023",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_TournamentsMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority",
         "ASPNETCORE_TeamsMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority",
         "ASPNETCORE_MatchesMongoDB__ConnectionURI": "mongodb+srv://danielfgalindoc:Mongocluster123*@cluster0.a1etllb.mongodb.net/?retryWrites=true&w=majority"
       },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7004;http://localhost:5023"
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -25,17 +34,9 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "environmentVariables": {},
       "publishAllPorts": true,
       "useSSL": true
-    }
-  },
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:62202",
-      "sslPort": 44324
     }
   }
 }
