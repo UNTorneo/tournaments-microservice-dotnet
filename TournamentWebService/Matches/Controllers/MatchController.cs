@@ -79,6 +79,10 @@ namespace TournamentWebService.Matches.Controllers
                 {
                     return BadRequest(new { error = "El estado del partido no es valido" });
                 }
+                if (match.status == MatchDataValidation.matchStatus[(int) MatchStatusIndex.Playing] || match.status == MatchDataValidation.matchStatus[(int)MatchStatusIndex.Finished])
+                {
+                    return BadRequest(new { error = "Este no es el método indicado para iniciar o finalizar partidos" });
+                }
                 if(match.homeTeamScore == 0 && match.visitingTeamScore == 0)
                 {
                     match.homeTeamScore = matchAux.homeTeamScore;
@@ -157,5 +161,7 @@ namespace TournamentWebService.Matches.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+        //TODO: start and finish matches (sending MQ message)
     }
 }
