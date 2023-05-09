@@ -1,9 +1,11 @@
-﻿namespace TournamentWebService.Core.Publisher
+﻿using System;
+
+namespace TournamentWebService.Core.Publisher
 {
-    public class Constants
+    public static class Constants
     {
-        public readonly string queueHost = "localhost";
-        public readonly string matchesQueue = "matches";
-        public readonly string tournamentsQueue = "tournaments";
+        public static readonly string mqHost = "localhost";
+        public static readonly string matchesQueue = "matches";
+        public static readonly string tournamentsQueue = "tournaments";
     }
 }

@@ -5,7 +5,7 @@ namespace TournamentWebService.Core.Publisher
 {
     public class Publisher
     {
-        public void publishMessage(string host, string queue, string msg)
+        public static void publishMessage(string host, string queue, string msg)
         {
             var factory = new ConnectionFactory { HostName = host };
             using var connection = factory.CreateConnection();
@@ -24,7 +24,7 @@ namespace TournamentWebService.Core.Publisher
                                  routingKey: queue,
                                  basicProperties: null,
                                  body: body);
-            Console.WriteLine($" [x] Sent {message}");
+            Console.WriteLine($" [x] Sent data: {message}");
         }
     }
 }

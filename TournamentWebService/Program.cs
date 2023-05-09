@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables(prefix: "ASPNETCORE_");
 
 // Set port (for container running)
-builder.WebHost.UseUrls("http://*:443");
+//builder.WebHost.UseUrls("http://*:443");
 
 
 // Find connectionURI in environment variables (doesn't work)
@@ -25,11 +25,11 @@ builder.WebHost.UseUrls("http://*:443");
 
 
 // Configure Kestrel (ports for local debug)
-//builder.WebHost.UseKestrel(options =>
-//{
-//    options.ListenAnyIP(443); // to listen for incoming http connection on port 443
-//    options.ListenAnyIP(7001, configure => configure.UseHttps()); // to listen for incoming https connection on port 7001
-//});
+builder.WebHost.UseKestrel(options =>
+{
+    options.ListenAnyIP(443); // to listen for incoming http connection on port 443
+    options.ListenAnyIP(7001, configure => configure.UseHttps()); // to listen for incoming https connection on port 7001
+});
 
 builder.Services.Configure<TournamentsMongoDBSettings>(builder.Configuration.GetSection("TournamentsMongoDB"));
 builder.Services.AddSingleton<TournamentMongoDBService>();

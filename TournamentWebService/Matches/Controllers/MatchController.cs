@@ -8,6 +8,8 @@ using TournamentWebService.Teams.Models;
 using TournamentWebService.Teams.Services;
 using TournamentWebService.Tournaments.Models;
 using TournamentWebService.Tournaments.Services;
+using TournamentWebService.Core.Publisher;
+using Newtonsoft.Json;
 
 namespace TournamentWebService.Matches.Controllers
 {
@@ -162,6 +164,53 @@ namespace TournamentWebService.Matches.Controllers
             }
         }
 
-        //TODO: start and finish matches (sending MQ message)
+        [HttpPatch("start-match/{id}")]
+        public async Task<IActionResult> StartMatch(string id)
+        {
+            try {
+                Match match = await _matchMongoDBService.GetOneAsync(id);
+                if (!(match.status == MatchDataValidation.matchStatus[(int)MatchStatusIndex.Confirmed]))
+                    return BadRequest(new { error = "El estado actual del partido es incorrecto, no es posible iniciarlo" });
+                match.status = MatchDataValidation.matchStatus[(int)MatchStatusIndex.Playing];
+                await _matchMongoDBService.UpdateAsync(id, match);
+                StartChatMessage startChatMessage = new()
+                {
+                    DATA = new StartChatData(match.Id, "private")
+                };
+                string message = JsonConvert.SerializeObject(startChatMessage);
+                Console.WriteLine(message);
+                Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                return Ok(new { message = "Partido iniciado" });
+            } 
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch("end-match/{id}")]
+        public async Task<IActionResult> EndMatch(string id)
+        {
+            try
+            {
+                Match match = await _matchMongoDBService.GetOneAsync(id);
+                if (!(match.status == MatchDataValidation.matchStatus[(int)MatchStatusIndex.Playing]))
+                    return BadRequest(new { error = "El estado actual del partido es incorrecto, no es posible finalizarlo" });
+                match.status = MatchDataValidation.matchStatus[(int)MatchStatusIndex.Finished];
+                await _matchMongoDBService.UpdateAsync(id, match);
+                EndChatMessage endChatMessage = new()
+                {
+                    DATA = new EndChatData(match.Id)
+                };
+                string message = JsonConvert.SerializeObject(endChatMessage);
+                Console.WriteLine(message);
+                Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                return Ok(new { message = "Partido terminado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
     }
 }

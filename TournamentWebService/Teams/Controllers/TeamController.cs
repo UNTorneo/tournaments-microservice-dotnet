@@ -95,8 +95,8 @@ namespace TournamentWebService.Teams.Controllers
                 Console.WriteLine(team.ToString());
                 Console.WriteLine("########################################");
                 if (team == null) return BadRequest(new { error = "No se encontraron equipos" });
-                List<Task<HttpResponseMessage>> taskList = new List<Task<HttpResponseMessage>> ();
-                HttpClient client = new HttpClient();
+                List<Task<HttpResponseMessage>> taskList = new();
+                HttpClient client = new();
                 foreach (string user in team.members) {
                     var response = client.GetAsync($"{UrlConstants.usersMS}/{user}");
                     taskList.Add(response);
