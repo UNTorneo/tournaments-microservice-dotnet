@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using TournamentWebService.Tournaments.Models;
 using TournamentWebService.Tournaments.Services;
+using TournamentWebService.Core.Publisher;
+using TournamentWebService.Teams.Models;
+using TournamentWebService.Teams.Services;
+using Newtonsoft.Json;
 
 namespace TournamentWebService.Tournaments.Controllers
 {
@@ -12,9 +16,11 @@ namespace TournamentWebService.Tournaments.Controllers
     public class TournamentController : BaseController
     {
         private readonly TournamentMongoDBService _tournamentMongoDBService;
-        public TournamentController(TournamentMongoDBService tournamentMongoDBService)
+        private readonly TeamMongoDBService _teamMongoDBService;
+        public TournamentController(TournamentMongoDBService tournamentMongoDBService, TeamMongoDBService teamMongoDBService)
         {
             _tournamentMongoDBService = tournamentMongoDBService;
+            _teamMongoDBService = teamMongoDBService;
         }
 
         [HttpGet]
@@ -65,6 +71,10 @@ namespace TournamentWebService.Tournaments.Controllers
                 if (tournament.status != null && !TournamentDataValidation.tournamentStatus.Contains(tournament.status))
                 {
                     return BadRequest(new { error = "El estado del torneo no es valido" });
+                }
+                if (tournament.status == TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.InProgress] || tournament.status == TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.Finished])
+                {
+                    return BadRequest(new { error = "Este no es el método indicado para iniciar o finalizar torneos" });
                 }
                 await _tournamentMongoDBService.UpdateAsync(id, tournament);
                 return Ok(new { message = "Torneo actualizado" });
@@ -134,6 +144,66 @@ namespace TournamentWebService.Tournaments.Controllers
                 List<Tournament> tournaments = await _tournamentMongoDBService.GetTournamentsByStatusAsync(status);
                 if (tournaments.Count() == 0) return BadRequest(new { error = "No hay torneos con este estado" });
                 return Ok(tournaments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch]
+        [Route("start-tournament/{id}")]
+        public async Task<IActionResult> StartTournament(string id)
+        {
+            try
+            {
+                Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
+                if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
+                if (tournament.status != TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.Confirmed])
+                    return BadRequest(new { error = "El estado actual del torneo es incorrecto, no es posible iniciarlo" });
+                tournament.status = TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.InProgress];
+                List<string> players = new();
+                foreach (var team in tournament.teams)
+                {
+                    Team teamAux = await _teamMongoDBService.GetOneAsync(team);
+                    if (teamAux == null) return BadRequest(new { error = "No se encontraron los equipos de este partido" });
+                    players.AddRange(teamAux.members);
+                }
+                int[] playersInt = Array.ConvertAll(players.ToArray(), int.Parse);
+                StartTournamentMessage startTournamentMessage = new()
+                {
+                    DATA = new StartTournamentData(tournament.Id, playersInt)
+                };
+                string message = JsonConvert.SerializeObject(startTournamentMessage);
+                Publisher.publishMessage(Constants.mqHost, Constants.tournamentsQueue, message);
+                await _tournamentMongoDBService.UpdateAsync(id, tournament);
+                return Ok(new { message = "Torneo iniciado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch]
+        [Route("end-tournament/{id}")]
+        public async Task<IActionResult> EndTournament(string id)
+        {
+            try
+            {
+                Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
+                if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
+                if (tournament.status != TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.InProgress])
+                    return BadRequest(new { error = "El estado actual del torneo es incorrecto, no es posible finalizarlo" });
+                tournament.status = TournamentDataValidation.tournamentStatus[(int)TournamentStatusIndex.Finished];
+                EndTournamentMessage endTournamentMessage = new()
+                {
+                    DATA = new EndTournamentData(tournament.Id)
+                };
+                string message = JsonConvert.SerializeObject(endTournamentMessage);
+                Publisher.publishMessage(Constants.mqHost, Constants.tournamentsQueue, message);
+                await _tournamentMongoDBService.UpdateAsync(id, tournament);
+                return Ok(new { message = "Torneo finalizado" });
             }
             catch (Exception ex)
             {

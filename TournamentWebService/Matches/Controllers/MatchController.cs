@@ -10,6 +10,7 @@ using TournamentWebService.Tournaments.Models;
 using TournamentWebService.Tournaments.Services;
 using TournamentWebService.Core.Publisher;
 using Newtonsoft.Json;
+using static MongoDB.Bson.Serialization.Serializers.SerializerHelper;
 
 namespace TournamentWebService.Matches.Controllers
 {
@@ -167,19 +168,30 @@ namespace TournamentWebService.Matches.Controllers
         [HttpPatch("start-match/{id}")]
         public async Task<IActionResult> StartMatch(string id)
         {
-            try {
+            try 
+            {
                 Match match = await _matchMongoDBService.GetOneAsync(id);
-                if (!(match.status == MatchDataValidation.matchStatus[(int)MatchStatusIndex.Confirmed]))
+                if (match == null) return BadRequest(new { error = "Partido no encontrado" });
+                if (match.status != MatchDataValidation.matchStatus[(int)MatchStatusIndex.Confirmed])
                     return BadRequest(new { error = "El estado actual del partido es incorrecto, no es posible iniciarlo" });
                 match.status = MatchDataValidation.matchStatus[(int)MatchStatusIndex.Playing];
-                await _matchMongoDBService.UpdateAsync(id, match);
+                Team homeTeam = await _teamMongoDBService.GetOneAsync(match.homeTeam);
+                Team visitingTeam = await _teamMongoDBService.GetOneAsync(match.visitingTeam);
+                if (homeTeam == null || visitingTeam == null) return BadRequest(new { error = "No se encontraron los equipos de este partido" });
+                string[] homePlayers = homeTeam.members.ToArray();
+                string[] visitingPlayers = visitingTeam.members.ToArray();
+                string[] players = new string[homePlayers.Length + visitingPlayers.Length];
+                homePlayers.CopyTo(players, 0);
+                visitingPlayers.CopyTo(players, homePlayers.Length);
+                int[] playersInt = new int[players.Length];
+                playersInt = Array.ConvertAll(players, int.Parse);
                 StartChatMessage startChatMessage = new()
                 {
-                    DATA = new StartChatData(match.Id, "private")
+                    DATA = new StartChatData(match.Id, playersInt)
                 };
                 string message = JsonConvert.SerializeObject(startChatMessage);
-                Console.WriteLine(message);
                 Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                await _matchMongoDBService.UpdateAsync(id, match);
                 return Ok(new { message = "Partido iniciado" });
             } 
             catch (Exception ex)
@@ -194,17 +206,17 @@ namespace TournamentWebService.Matches.Controllers
             try
             {
                 Match match = await _matchMongoDBService.GetOneAsync(id);
-                if (!(match.status == MatchDataValidation.matchStatus[(int)MatchStatusIndex.Playing]))
+                if (match == null) return BadRequest(new { error = "Partido no encontrado" });
+                if (match.status != MatchDataValidation.matchStatus[(int)MatchStatusIndex.Playing])
                     return BadRequest(new { error = "El estado actual del partido es incorrecto, no es posible finalizarlo" });
                 match.status = MatchDataValidation.matchStatus[(int)MatchStatusIndex.Finished];
-                await _matchMongoDBService.UpdateAsync(id, match);
                 EndChatMessage endChatMessage = new()
                 {
                     DATA = new EndChatData(match.Id)
                 };
                 string message = JsonConvert.SerializeObject(endChatMessage);
-                Console.WriteLine(message);
                 Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                await _matchMongoDBService.UpdateAsync(id, match);
                 return Ok(new { message = "Partido terminado" });
             }
             catch (Exception ex)

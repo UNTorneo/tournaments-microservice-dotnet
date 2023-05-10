@@ -28,6 +28,6 @@
         Confirmed,
         Finished,
         Canceled,
-        InProgres
+        InProgress
     }
 }

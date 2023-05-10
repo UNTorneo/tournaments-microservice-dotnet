@@ -70,7 +70,7 @@ namespace TournamentWebService.Tournaments.Services
 
         public async Task<List<Tournament>> GetActiveTournamentsAsync()
         {
-            int tournamentStatusIndex = (int) TournamentStatusIndex.InProgres;
+            int tournamentStatusIndex = (int) TournamentStatusIndex.InProgress;
             return await _tournamentsCollection.Find(tournament => tournament.status == TournamentDataValidation.tournamentStatus[tournamentStatusIndex]).ToListAsync();
         }
 
