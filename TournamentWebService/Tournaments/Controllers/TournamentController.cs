@@ -8,6 +8,7 @@ using TournamentWebService.Core.Publisher;
 using TournamentWebService.Teams.Models;
 using TournamentWebService.Teams.Services;
 using Newtonsoft.Json;
+using TournamentWebService.Core;
 
 namespace TournamentWebService.Tournaments.Controllers
 {
@@ -106,7 +107,75 @@ namespace TournamentWebService.Tournaments.Controllers
             {
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
                 if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
-                return Ok(tournament);
+
+                HttpClient client = new();
+                using HttpResponseMessage sportsResponse = await client.GetAsync($"{UrlConstants.sportsMS}/sport/{tournament.sportId}");
+                sportsResponse.EnsureSuccessStatusCode();
+                string? sportsResponseBody = await sportsResponse.Content.ReadAsStringAsync();
+                Sport? sport;
+                if (!String.IsNullOrEmpty(sportsResponseBody))
+                    sport = JsonConvert.DeserializeObject<Sport>(sportsResponseBody);
+                else
+                    sport = null;
+
+                using HttpResponseMessage? modesResponse = await client.GetAsync($"{UrlConstants.sportsMS}/mode/{tournament.modeId}/mode");
+                modesResponse.EnsureSuccessStatusCode();
+                string? modesResponseBody = await modesResponse.Content.ReadAsStringAsync();
+                Mode? mode;
+                if (!String.IsNullOrEmpty(modesResponseBody))
+                {
+                    mode = JsonConvert.DeserializeObject<Mode>(modesResponseBody);
+                }
+                else
+                {
+                    mode = null;
+                }
+
+                Clan? clan;
+                if (tournament.clanId != null)
+                {
+                    using HttpResponseMessage clansResponse = await client.GetAsync($"{UrlConstants.clansMS}/clans/{tournament.modeId}");
+                    modesResponse.EnsureSuccessStatusCode();
+                    string clansResponseBody = await modesResponse.Content.ReadAsStringAsync();
+                    if (!String.IsNullOrEmpty(clansResponseBody))
+                        clan = JsonConvert.DeserializeObject<Clan>(modesResponseBody);
+                    else
+                        clan = null;
+                }
+                else
+                    clan = null;
+
+                Venue? venue;
+                if (tournament.venueId != null)
+                {
+                    using HttpResponseMessage venueResponse = await client.GetAsync($"{UrlConstants.tournamentVenuesMS}/venue?id={tournament.venueId}");
+                    venueResponse.EnsureSuccessStatusCode();
+                    string venueResponseBody = await venueResponse.Content.ReadAsStringAsync();
+                    if (!String.IsNullOrEmpty(venueResponseBody))
+                        venue = JsonConvert.DeserializeObject<Venue>(venueResponseBody);
+                    else
+                        venue = null;
+                }
+                else
+                    venue = null;
+
+                TournamentPopulated res = new()
+                {
+                    Id = tournament.Id,
+                    name = tournament.name,
+                    teams = tournament.teams,
+                    sportId = sport,
+                    modeId = mode,
+                    clanId = clan,
+                    venueId = venue,
+                    venueName = tournament.venueName,
+                    access = tournament.access,
+                    status = tournament.status,
+                    createdAt = tournament.createdAt,
+                    updatedAt = tournament.updatedAt
+                };
+
+                return Ok(res);
             }
             catch (Exception ex)
             {

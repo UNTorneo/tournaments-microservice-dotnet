@@ -92,13 +92,14 @@ namespace TournamentWebService.Teams.Controllers
             {
                 Team team = await _teamMongoDBService.GetOneAsync(id);
                 Console.WriteLine("########################################");
-                Console.WriteLine(team.ToString());
+                foreach (var member in team.members) {Console.Write(member + " ,");}
+                Console.WriteLine();
                 Console.WriteLine("########################################");
                 if (team == null) return BadRequest(new { error = "No se encontraron equipos" });
                 List<Task<HttpResponseMessage>> taskList = new();
                 HttpClient client = new();
                 foreach (string user in team.members) {
-                    var response = client.GetAsync($"{UrlConstants.usersMS}/{user}");
+                    var response = client.GetAsync($"{UrlConstants.usersMS}/users/{user}");
                     taskList.Add(response);
                 }
                 var usersMsResponse = await Task.WhenAll(taskList);
