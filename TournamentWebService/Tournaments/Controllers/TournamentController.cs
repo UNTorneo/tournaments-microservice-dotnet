@@ -108,8 +108,13 @@ namespace TournamentWebService.Tournaments.Controllers
                 Tournament tournament = await _tournamentMongoDBService.GetOneAsync(id);
                 if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
 
+
                 HttpClient client = new();
                 using HttpResponseMessage sportsResponse = await client.GetAsync($"{UrlConstants.sportsMS}/sport/{tournament.sportId}");
+                if ((int) sportsResponse.StatusCode > 300)
+                {
+                    return BadRequest(new { error = "Hubo un error encontrando los datos del deporte de este torneo" });
+                }
                 sportsResponse.EnsureSuccessStatusCode();
                 string? sportsResponseBody = await sportsResponse.Content.ReadAsStringAsync();
                 Sport? sport;
@@ -118,7 +123,12 @@ namespace TournamentWebService.Tournaments.Controllers
                 else
                     sport = null;
 
+
                 using HttpResponseMessage? modesResponse = await client.GetAsync($"{UrlConstants.sportsMS}/mode/{tournament.modeId}/mode");
+                if ((int)sportsResponse.StatusCode > 300)
+                {
+                    return BadRequest(new { error = "Hubo un error encontrando del modo de este torneo" });
+                }
                 modesResponse.EnsureSuccessStatusCode();
                 string? modesResponseBody = await modesResponse.Content.ReadAsStringAsync();
                 Mode? mode;
@@ -131,12 +141,18 @@ namespace TournamentWebService.Tournaments.Controllers
                     mode = null;
                 }
 
+
                 Clan? clan;
                 if (tournament.clanId != null)
                 {
                     using HttpResponseMessage clansResponse = await client.GetAsync($"{UrlConstants.clansMS}/clans/{tournament.modeId}");
+                    if ((int)sportsResponse.StatusCode > 300)
+                    {
+                        return BadRequest(new { error = "Hubo un error encontrando el clan de este torneo" });
+                    }
                     modesResponse.EnsureSuccessStatusCode();
                     string clansResponseBody = await modesResponse.Content.ReadAsStringAsync();
+
                     if (!String.IsNullOrEmpty(clansResponseBody))
                         clan = JsonConvert.DeserializeObject<Clan>(modesResponseBody);
                     else
@@ -145,20 +161,25 @@ namespace TournamentWebService.Tournaments.Controllers
                 else
                     clan = null;
 
+
                 Venue? venue;
                 if (tournament.venueId != null)
                 {
                     using HttpResponseMessage venueResponse = await client.GetAsync($"{UrlConstants.tournamentVenuesMS}/venue?id={tournament.venueId}");
+                    if ((int)sportsResponse.StatusCode > 300)
+                    {
+                        return BadRequest(new { error = "Hubo un error encontrando el lugar de este torneo" });
+                    }
                     venueResponse.EnsureSuccessStatusCode();
                     string venueResponseBody = await venueResponse.Content.ReadAsStringAsync();
                     if (!String.IsNullOrEmpty(venueResponseBody))
                         venue = JsonConvert.DeserializeObject<Venue>(venueResponseBody);
                     else
                         venue = null;
+
                 }
                 else
                     venue = null;
-
                 TournamentPopulated res = new()
                 {
                     Id = tournament.Id,
