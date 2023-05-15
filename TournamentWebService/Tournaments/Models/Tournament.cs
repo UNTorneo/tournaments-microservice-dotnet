@@ -67,7 +67,7 @@ namespace TournamentWebService.Tournaments.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
         public string name { get; set; }
-        public List<string> teams { get; set; }
+        public List<Team> teams { get; set; }
         public Sport sportId { get; set; }
         public Mode modeId { get; set; }
         public Clan? clanId { get; set; }

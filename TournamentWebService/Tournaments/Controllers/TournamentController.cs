@@ -109,6 +109,17 @@ namespace TournamentWebService.Tournaments.Controllers
                 if (tournament == null) return BadRequest(new { error = "Torneo no encontrado" });
 
 
+                List<Team?> teamsPopulated = new();
+                foreach (string teamId in tournament.teams)
+                {
+                    Team team = await _teamMongoDBService.GetOneAsync(teamId);
+                    if (team == null)
+                        teamsPopulated.Add(null);
+                    else
+                        teamsPopulated.Add(team);
+                }
+
+
                 HttpClient client = new();
                 using HttpResponseMessage sportsResponse = await client.GetAsync($"{UrlConstants.sportsMS}/sport/{tournament.sportId}");
                 if ((int) sportsResponse.StatusCode > 300)
@@ -184,7 +195,7 @@ namespace TournamentWebService.Tournaments.Controllers
                 {
                     Id = tournament.Id,
                     name = tournament.name,
-                    teams = tournament.teams,
+                    teams = teamsPopulated,
                     sportId = sport,
                     modeId = mode,
                     clanId = clan,

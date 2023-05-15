@@ -123,7 +123,27 @@ namespace TournamentWebService.Matches.Controllers
             {
                 Match match = await _matchMongoDBService.GetOneAsync(id);
                 if (match == null) return BadRequest(new { error = "Partido no encontrado" });
-                return Ok(match);
+
+                Tournament tournament = await _tournamentMongoDBService.GetOneAsync(match.tournamentId);
+                Team homeTeam = await _teamMongoDBService.GetOneAsync(match.homeTeam);
+                Team visitingTeam = await _teamMongoDBService.GetOneAsync(match.visitingTeam);
+
+                MatchPopulated res = new()
+                {
+                    Id = match.Id,
+                    tournamentId = tournament,
+                    homeTeam = homeTeam,
+                    visitingTeam = visitingTeam,
+                    homeTeamScore = match.homeTeamScore,
+                    visitingTeamScore = match.visitingTeamScore,
+                    date = match.date,
+                    courtId = match.courtId,
+                    status = match.status,
+                    createdAt = match.createdAt,
+                    updatedAt = match.updatedAt,
+                };
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
