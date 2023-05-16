@@ -35,7 +35,32 @@ namespace TournamentWebService.Matches.Controllers
             {
                 List<Match> matches = await _matchMongoDBService.GetAllAsync();
                 if (matches.Count == 0) return BadRequest(new { error = "No se encontraron partidos" });
-                return Ok(matches);
+                List<MatchPopulated> matchespopulated = new();
+
+                foreach (var match in matches)
+                {
+                    Tournament tournament = await _tournamentMongoDBService.GetOneAsync(match.tournamentId);
+                    Team homeTeam = await _teamMongoDBService.GetOneAsync(match.homeTeam);
+                    Team visitingTeam = await _teamMongoDBService.GetOneAsync(match.visitingTeam);
+
+                    MatchPopulated matchPopulated = new()
+                    {
+                        Id = match.Id,
+                        tournamentId = tournament,
+                        homeTeam = homeTeam,
+                        visitingTeam = visitingTeam,
+                        homeTeamScore = match.homeTeamScore,
+                        visitingTeamScore = match.visitingTeamScore,
+                        date = match.date,
+                        courtId = match.courtId,
+                        status = match.status,
+                        createdAt = match.createdAt,
+                        updatedAt = match.updatedAt,
+                    };
+                    matchespopulated.Add(matchPopulated);
+                }
+
+                return Ok(matchespopulated);
             }
             catch (Exception ex)
             {
