@@ -145,5 +145,24 @@ namespace TournamentWebService.Teams.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+        [HttpPatch("register-member/{teamId}/{userId}")]
+        public async Task<IActionResult> RegisterTeamMember(string teamId, string userId)
+        {
+            try
+            {
+                Team team = await _teamMongoDBService.GetOneAsync(teamId);
+                if (team == null) return BadRequest(new { error = "Equipo no encontrado" });
+                if (team.members.Contains(userId))
+                    return BadRequest(new { error = "El usuario ya es miembro de este equipo" });
+                team.members.Add(userId);
+                await _teamMongoDBService.UpdateAsync(teamId, team);
+                return Ok(new { message = "Miembor registrado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
     }
 }
