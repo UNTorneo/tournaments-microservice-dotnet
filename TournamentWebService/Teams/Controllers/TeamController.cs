@@ -157,7 +157,7 @@ namespace TournamentWebService.Teams.Controllers
                     return BadRequest(new { error = "El usuario ya es miembro de este equipo" });
                 team.members.Add(userId);
                 await _teamMongoDBService.UpdateAsync(teamId, team);
-                return Ok(new { message = "Miembor registrado exitosamente" });
+                return Ok(new { message = "Miembro registrado exitosamente" });
             }
             catch (Exception ex)
             {
