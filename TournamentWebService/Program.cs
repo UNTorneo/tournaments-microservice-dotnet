@@ -31,6 +31,7 @@ builder.WebHost.UseKestrel(options =>
     options.ListenAnyIP(7001, configure => configure.UseHttps()); // to listen for incoming https connection on port 7001
 });
 
+
 builder.Services.Configure<TournamentsMongoDBSettings>(builder.Configuration.GetSection("TournamentsMongoDB"));
 builder.Services.AddSingleton<TournamentMongoDBService>();
 builder.Services.Configure<TeamsMongoDBSettings>(builder.Configuration.GetSection("TeamsMongoDB"));

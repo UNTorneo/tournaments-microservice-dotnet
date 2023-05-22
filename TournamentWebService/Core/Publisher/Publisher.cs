@@ -5,9 +5,9 @@ namespace TournamentWebService.Core.Publisher
 {
     public class Publisher
     {
-        public static void publishMessage(string host, string queue, string msg)
+        public static void publishMessage(string url, string queue, string msg)
         {
-            var factory = new ConnectionFactory { HostName = host };
+            var factory = new ConnectionFactory { Uri = new Uri(url) };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 

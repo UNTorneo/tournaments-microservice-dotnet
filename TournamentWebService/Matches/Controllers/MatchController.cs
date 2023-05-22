@@ -235,7 +235,7 @@ namespace TournamentWebService.Matches.Controllers
                     DATA = new StartChatData(match.Id, playersInt)
                 };
                 string message = JsonConvert.SerializeObject(startChatMessage);
-                Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                Publisher.publishMessage(Constants.mqUrl, Constants.matchesQueue, message);
                 await _matchMongoDBService.UpdateAsync(id, match);
                 return Ok(new { message = "Partido iniciado" });
             } 
@@ -260,7 +260,7 @@ namespace TournamentWebService.Matches.Controllers
                     DATA = new EndChatData(match.Id)
                 };
                 string message = JsonConvert.SerializeObject(endChatMessage);
-                Publisher.publishMessage(Constants.mqHost, Constants.matchesQueue, message);
+                Publisher.publishMessage(Constants.mqUrl, Constants.matchesQueue, message);
                 await _matchMongoDBService.UpdateAsync(id, match);
                 return Ok(new { message = "Partido terminado" });
             }

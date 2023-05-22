@@ -372,7 +372,7 @@ namespace TournamentWebService.Tournaments.Controllers
                 foreach (var team in tournament.teams)
                 {
                     Team teamAux = await _teamMongoDBService.GetOneAsync(team);
-                    if (teamAux == null) return BadRequest(new { error = "No se encontraron los equipos de este partido" });
+                    if (teamAux == null) return BadRequest(new { error = "No se encontraron los equipos de este torneo" });
                     players.AddRange(teamAux.members);
                 }
                 int[] playersInt = Array.ConvertAll(players.ToArray(), int.Parse);
@@ -381,7 +381,7 @@ namespace TournamentWebService.Tournaments.Controllers
                     DATA = new StartTournamentData(tournament.Id, playersInt)
                 };
                 string message = JsonConvert.SerializeObject(startTournamentMessage);
-                Publisher.publishMessage(Constants.mqHost, Constants.tournamentsQueue, message);
+                Publisher.publishMessage(Constants.mqUrl, Constants.tournamentsQueue, message);
                 await _tournamentMongoDBService.UpdateAsync(id, tournament);
                 return Ok(new { message = "Torneo iniciado" });
             }
@@ -407,7 +407,7 @@ namespace TournamentWebService.Tournaments.Controllers
                     DATA = new EndTournamentData(tournament.Id)
                 };
                 string message = JsonConvert.SerializeObject(endTournamentMessage);
-                Publisher.publishMessage(Constants.mqHost, Constants.tournamentsQueue, message);
+                Publisher.publishMessage(Constants.mqUrl, Constants.tournamentsQueue, message);
                 await _tournamentMongoDBService.UpdateAsync(id, tournament);
                 return Ok(new { message = "Torneo finalizado" });
             }
